@@ -1,4 +1,4 @@
-# Contributing To The CCXT Library
+# Contributing To The CCXT-JS-JS Library
 
 - [How To Submit A Question Or Issue](#how-to-submit-an-issue)
 - [How To Contribute Code](#how-to-contribute-code)
@@ -30,10 +30,10 @@ If you want to submit an issue and you want your issue to be resolved quickly, h
     - paste a complete code snippet you're having difficulties with, avoid one-liners
     - paste the **full verbose output** of the failing method without your keys
     - the verbose output should include the request and response from the exchange (not just an error callstack)
-    - write your language **and version**
-    - write ccxt library version
-    - which exchange it is
-    - which method you're trying to call
+    - provide your language **and version**
+    - provide ccxt-js library version
+    - provide the exchange
+    - provide which method you're trying to call
 
 ### Reporting Vulnerabilities And Critical Issues
 
@@ -42,11 +42,12 @@ free to send us a message to <a href="mailto:contact@nibarulabs.io">contact@niba
 
 ## How To Contribute Code
 
-- *
-  *[MAKE SURE YOUR CODE IS UNIFIED](https://github.com/nibarulabs/ccxt-js/blob/master/CONTRIBUTING.md#derived-exchange-classes)!
-  **
+-
+    *
+*[MAKE SURE YOUR CODE IS UNIFIED](https://github.com/nibarulabs/ccxt-js/blob/master/CONTRIBUTING.md#derived-exchange-classes)!
+**
 
-  **↑ This is the most important rule of all!!!**
+**↑ This is the most important rule of all!!!**
 
 - **BEFORE ANY PUSH MAKE SURE YOU RUN THIS COMMAND LOCALLY: `git config core.hooksPath .git-templates/hooks`**
 
@@ -94,7 +95,7 @@ library (where implemented already) and copy the adopted practices.
 If your proposal, suggestion or improvement does not relate to the above list of tasks before submitting it make sure it
 is:
 
-1. really needed by the majority of ccxt users
+1. really needed by the majority of ccxt-js users
 2. designed to be a general-purpose solution, not hardcoded for your specific needs
 3. done in a generalized way compatible with all exchanges (not exchange-specific)
 4. portable (available in all supported languages)
@@ -103,36 +104,35 @@ is:
 7. doesn't break anything (if you change a method, make sure that all other methods calling the edited method are not
    broken)
 
-The following is a set of rules for contributing to the ccxt library codebase.
+The following is a set of rules for contributing to the ccxt-js library codebase.
 
 ## What You Need To Have
 
-If you just want to use CCXT inside your project simply install it as a regular package into the project folder as
+If you just want to use CCXT-JS inside your project simply install it as a regular package into the project folder as
 documented in the Manual (https://github.com/nibarulabs/ccxt-js/wiki/Install):
 
 - [JavaScript / Node.js / PNPM](https://github.com/nibarulabs/ccxt-js/wiki/Install#javascript-npm)
 
   ```shell
-  # JavaScript / Node.js / NPM
+  # JavaScript / Node.js / PNPM
   pnpm install ccxt
   ```
 
 That builds a container and opens a shell, where the `npm run build` and `node run-tests` commands should simply work
 out of the box.
 
-The CCXT folder is mapped inside of the container, except the `node_modules` folder — the container would have its own
+The CCXT-JS folder is mapped inside of the container, except the `node_modules` folder — the container would have its
+own
 ephemeral copy — so that won't mess up your locally installed modules. This means that you can edit sources on your host
 machine using your favorite editor and build/test them in the running container.
 
 This way you can keep the build tools and processes isolated, not having to work through the painful process of
 installing all those dependencies to your host machine manually.
 
-### Without Docker
-
 #### Dependencies
 
 - Git
-- [Node.js](https://nodejs.org/en/download/) 8+
+- [Node.js](https://nodejs.org/en/download/) 18+
 
 #### Build Steps
 
@@ -173,9 +173,8 @@ The contents of the repository are structured as follows:
 /build/export-exchanges.js # used to create tables of exchanges in the docs during the build
 /build/update-badges.js    # a JS script to update badges in the README and in docs
 /build/vss.js              # reads single-sourced version from package.json and writes it everywhere
-/dist/                     # a folder for the generated browser bundle of CCXT
-/ccxt.js                   # entry point for the master JS version of the ccxt library
-/ccxt.php                  # entry point for the PHP version of the ccxt library
+/dist/                     # a folder for the generated browser bundle of CCXT-JS
+/ccxt.js                   # entry point for the master JS version of the ccxt-js library
 /js/                       # the JS version of the library
 /ts/                       # the TypeScript version of the library
 /examples/                 # self-explanatory
@@ -188,7 +187,7 @@ The contents of the repository are structured as follows:
 
 ### Multilanguage Support
 
-The ccxt library is available in purs JS only.
+The ccxt-js library is available in pure JS only.
 
 The module entry points are:
 
@@ -198,16 +197,13 @@ Generated versions and docs are transpiled from the source `ts/src` folder by th
 
 ### Transpiled (generated) files
 
-- All derived exchange classes are transpiled by `tsc` from TypeScript to JavaScript and by our custom transpiler from
-  TypeScript to PHP and Python. The source files are language-agnostic, easily mapped line-to-line to any other language
-  and written in a cross-language-compatible way. Any coder can read it (by design).
-- All base classes are **not** transpiled, those are language-specific.
+- Does not support transpiling files.
 
 #### JavaScript
 
-The `ccxt.browser.js` is generated with Babel from source.
+The `ccxt.browser.js` is generated with Babel from source. (DEPRECATED)
 
-#### Typescript
+#### Typescript (DEPRECATED)
 
 - Development is made using these files
 
@@ -274,6 +270,38 @@ between *exchange-specific market-ids* and *unified symbols*! This is explained 
 - https://github.com/nibarulabs/ccxt-js/wiki/Manual#markets
 - https://github.com/nibarulabs/ccxt-js/wiki/Manual#symbols-and-market-ids
 
+### Styles
+
+All this code will be re-formatted for K&R style (Kernighan and Ritchie style). The Allman style (below) is not allowed.
+
+**NEVER DO THIS:**
+
+```javascript
+async
+fetchTicker(symbol, params = {})
+{
+    const request = {
+        'pair': symbol, // very bad, sending unified symbols to the exchange directly
+    };
+    const response = await this.publicGetEndpoint(request);
+    // parse in a unified way...
+}
+```
+
+**THIS IS CORRECT:**
+
+```javascript
+async
+fetchTicker(symbol, params = {})
+{
+    const request = {
+        'pair': symbol, // very bad, sending unified symbols to the exchange directly
+    };
+    const response = await this.publicGetEndpoint(request);
+    // parse in a unified way...
+}
+```
+
 **NEVER DO THIS:**
 
 ```javascript
@@ -302,11 +330,12 @@ fetchTicker(symbol, params = {})
 }
 ```
 
-Instead of sending a unified CCXT symbol to the exchange, we **always** take the exchange-specific market-`id` that
-corresponds to that symbol. If it so happens that an exchange specific market-id is exactly the same as the CCXT unified
-symbol – that's a happy coincidence, but we never rely on that in the unified CCXT API.
+Instead of sending a unified CCXT-JS symbol to the exchange, we **always** take the exchange-specific market-`id` that
+corresponds to that symbol. If it so happens that an exchange specific market-id is exactly the same as the CCXT-JS
+unified
+symbol – that's a happy coincidence, but we never rely on that in the unified CCXT-JS API.
 
-To get the exchange-specific market-id by a unified CCXT symbol, use the following methods:
+To get the exchange-specific market-id by a unified CCXT-JS symbol, use the following methods:
 
 - `this.market (symbol)` – returns the entire unified market structure, containing the `id`, `baseId`, `quoteId`, and
   many other interesting things
@@ -345,7 +374,7 @@ fetchTicker(symbol, params = {})
 
 When sending requests to the exchange unified symbols have to be _"converted"_ to exchange-specific market-`id`s like
 shown above. The same is true on the other end – when receiving an exchange response it has an exchange-specific
-market-`id` inside it that has to be _"converted back"_ to a unified CCXT symbol.
+market-`id` inside it that has to be _"converted back"_ to a unified CCXT-JS symbol.
 
 **We don't put exchange-specific market-`id`s in unified structures directly!** We can't freely interchange symbols with
 ids! There is a significant difference between an *exchange-specific market-ids* and *unified symbols*! This is
@@ -401,23 +430,14 @@ parseTrade(trade, market = undefined)
 }
 ```
 
-#### Accessing Dictionary Keys
+#### Accessing Map/Object Keys
 
-In JavaScript, dictionary keys can be accessed in two notations:
+In JavaScript, map/object keys can be accessed in two notations:
 
 - `object['key']` (single-quoted string key notation)
 - `object.key` (property notation)
 
 Both work almost identically, and one is implicitly converted to another upon executing the JavaScript code.
-
-While the above does work in JavaScript, **it will not work in Python or PHP**. In most languages, associative
-dictionary keys are not treated in the same way as properties. Therefore, in Python `object.key` is not the same
-as `object['key']`. In PHP `$object->key` is not the same as `$object['key']` as well. Languages that differentiate
-between associative keys and properties use different notations for the two.
-
-To keep the code transpileable, please, remember this simple rule: *always use the single-quoted string key
-notation `object['key']` for accessing all associative dictionary keys in all languages everywhere throughout this
-library!*
 
 #### Sanitizing Input With `safe`-Methods
 
@@ -500,7 +520,7 @@ if ('foo' in params) {
 
 Do not reinvent the wheel. Always use base-class methods for cryptography.
 
-The CCXT library supports the following authentication algorithms and cryptography algorithms:
+The CCXT-JS library supports the following authentication algorithms and cryptography algorithms:
 
 - HMAC
 - JWT (JSON Web Token)
@@ -544,7 +564,7 @@ should use `'binary'` with `binaryToBase64()`.
 
 **All timestamps throughout all unified structures within this library are integer UTC timestamps _in milliseconds_!**
 
-In order to convert to milliseconds timestamps, CCXT implements the following methods:
+In order to convert to milliseconds timestamps, CCXT-JS implements the following methods:
 
 ```javascript
 const data = {
@@ -583,10 +603,7 @@ someString.length
 #### Adding Numbers And Concatenating Strings
 
 In JS the arithmetic addition `+` operator handles both strings and numbers. So, it can concatenate strings with `+` and
-can sum up numbers with `+` as well. The same is true with Python. With PHP this is different, so it has different
-operators for string concatenation (the "dot" operator `.`) and for arithmetic addition (the "plus" operator `+`). Once
-again, because the transpiler does no code introspection it cannot tell if you're adding up numbers or strings in JS.
-This works fine until you want to transpile this to other languages, be it PHP or whatever other language it is.
+can sum up numbers with `+` as well.
 
 There's this aspect of representation of numbers throughout the lib.
 The existing approach documented in the Manual says that the library will accept and will return "floats everywhere" for
@@ -818,7 +835,7 @@ and PHP as well. It is also described here:
 
 - https://github.com/nibarulabs/ccxt-js/wiki/Manual#api-methods--endpoints
 - https://github.com/nibarulabs/ccxt-js/wiki/Manual#implicit-api-methods
-- https://github.com/ccxt-dev/ccxt/wiki/Manual#api-method-naming-conventions
+- https://github.com/nibarulabs/ccxt-js/wiki/Manual#api-method-naming-conventions
 
 ```UNDER CONSTRUCTION```
 
@@ -846,7 +863,8 @@ Will work to re-add this back in.
 
 #### Adding Exchange Credentials
 
-CCXT has tests for both the public API and the private authenticated API. By default, CCXT's built-in tests will only
+CCXT-JS has tests for both the public API and the private authenticated API. By default, CCXT-JS's built-in tests will
+only
 test the public APIs, because the code repository does not include
 the [API keys](https://github.com/nibarulabs/ccxt-js/wiki/Manual#authentication) that are required for the private API
 tests. Also, the included private tests will not alter the balance of the account in any way, all tests are
@@ -863,7 +881,7 @@ An example of `keys.local.json` file:
 
 ```javascript
 {
-    "ftx"
+    "kraken"
 :
     {
         "apiKey"
@@ -934,17 +952,13 @@ node run-tests
 You can restrict tests to a specific language, a particular exchange or symbol:
 
 ```
-node run-tests [--js] [--python] [--python-async] [--php] [--php-async] [exchange] [symbol]
+node run-tests [--js] [exchange] [symbol]
 ```
 
-The `node run-tests exchangename` will try 5 tests: `js`, `python`, `python-async`, `php`, `php-async`. You can control
-that like so:
+The `node run-tests exchangename` will try the `js` tests. You can control that like so:
 
 ```
 node run-tests exchange --js
-node run-tests exchange --js --python-async
-node run-tests exchange --js --php
-node run-tests exchange --python --python-async
 ...
 ```
 
@@ -955,15 +969,7 @@ wrong:
 node js/test/test exchange --verbose
 ```
 
-The `test_sync` is just a synchronous version of `test_async`, so in most cases just running `test_async.py`
-and `test_async.php` is enough:
-
-```
-node js/test/test exchange --verbose
-```
-
-When all of the language-specific tests work, then node run-tests will also succeed. In order to run those tests you
-want to make sure that the build has completed successfully.
+In order to run those tests you want to make sure that the build has completed successfully.
 
 For example, the first of the following lines will only test the source JS version of the library (`ccxt.js`). It does
 not require an `npm run build` before running it (can be useful if you need to verify quickly whether your changes break
@@ -976,18 +982,16 @@ node run-tests --js                  # test master ccxt.js, all exchanges
 
 #### Writing Tests
 
+(NOTE: ts is deprecated)
+
 Follow this steps to add a test:
 
 - Create a file in [ts/tests/Exchange](ts/test/Exchange/) following syntax that can be transpiled.
 - Add test to `runPrivateTests` or `runPublicTests` to [ts/src/test/test.ts](ts/src/test/test.ts#L354) or for ccxt.pro
   endpoints to [ts/src/pro/test/test.ts](ts/src/pro/test/test.ts#L121)
-- run `npm run transpile` to generate the test file in javascript, python and php.
 - Call tests `node run-tests`
 
 ## Committing Changes To The Repository
-
-The build process generates many changes in the transpiled exchange files, e.g. for Python and PHP. **You should NOT
-commit them to GitHub, commit only the base (TS) file changes please**.
 
 ## Financial Contributions
 
