@@ -1,4 +1,4 @@
-# Contributing To The CCXT-JS-JS Library
+# Contributing To The CCXT-JS Library
 
 - [How To Submit A Question Or Issue](#how-to-submit-an-issue)
 - [How To Contribute Code](#how-to-contribute-code)
@@ -44,6 +44,7 @@ free to send us a message to <a href="mailto:contact@nibarulabs.io">contact@niba
 
 -
     *
+
 *[MAKE SURE YOUR CODE IS UNIFIED](https://github.com/nibarulabs/ccxt-js/blob/master/CONTRIBUTING.md#derived-exchange-classes)!
 **
 
@@ -277,8 +278,7 @@ All this code will be re-formatted for K&R style (Kernighan and Ritchie style). 
 **NEVER DO THIS:**
 
 ```javascript
-async
-fetchTicker(symbol, params = {})
+async fetchTicker(symbol, params = {}) 
 {
     const request = {
         'pair': symbol, // very bad, sending unified symbols to the exchange directly
@@ -291,9 +291,7 @@ fetchTicker(symbol, params = {})
 **THIS IS CORRECT:**
 
 ```javascript
-async
-fetchTicker(symbol, params = {})
-{
+async fetchTicker(symbol, params = {}) {
     const request = {
         'pair': symbol, // very bad, sending unified symbols to the exchange directly
     };
@@ -305,9 +303,7 @@ fetchTicker(symbol, params = {})
 **NEVER DO THIS:**
 
 ```javascript
-async
-fetchTicker(symbol, params = {})
-{
+async fetchTicker(symbol, params = {}) {
     const request = {
         'pair': symbol, // very bad, sending unified symbols to the exchange directly
     };
@@ -319,9 +315,7 @@ fetchTicker(symbol, params = {})
 **DO NOT DO THIS EITHER:**
 
 ```javascript
-async
-fetchTicker(symbol, params = {})
-{
+async fetchTicker(symbol, params = {}) {
     const request = {
         'symbol': symbol, // very bad, sending unified symbols to the exchange directly
     };
@@ -345,9 +339,7 @@ To get the exchange-specific market-id by a unified CCXT-JS symbol, use the foll
 **GOOD EXAMPLES:**
 
 ```javascript
-async
-fetchTicker(symbol, params = {})
-{
+async fetchTicker(symbol, params = {}) {
     const market = this.market(symbol); // the entire market structure
     const request = {
         'pair': market['id'], // good, they may be equal, but often differ, it's ok
@@ -358,9 +350,7 @@ fetchTicker(symbol, params = {})
 ```
 
 ```javascript
-async
-fetchTicker(symbol, params = {})
-{
+async fetchTicker(symbol, params = {}) {
     const marketId = this.marketId(symbol); // just the id
     const request = {
         'symbol': marketId, // good, they may be equal, but often differ, it's ok
@@ -386,8 +376,7 @@ explained in the Manual, here:
 **NEVER DO THIS:**:
 
 ```javascript
-parseTrade(trade, market = undefined)
-{
+parseTrade(trade, market = undefined) {
     // parsing code...
     return {
         'info': trade,
@@ -400,8 +389,7 @@ parseTrade(trade, market = undefined)
 **DO NOT DO THIS EITHER**
 
 ```javascript
-parseTrade(trade, market = undefined)
-{
+parseTrade(trade, market = undefined) {
     // parsing code...
     return {
         'info': trade,
@@ -417,8 +405,7 @@ with `loadMarkets()`:
 **GOOD EXAMPLE:**
 
 ```javascript
-parseTrade(trade, market = undefined)
-{
+parseTrade(trade, market = undefined) {
     const marketId = this.safeString(trade, 'pair');
     // safeSymbol is used to parse the market id to a unified symbol
     const symbol = this.safeSymbol(marketId, market);
